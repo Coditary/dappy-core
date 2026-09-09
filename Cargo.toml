@@ -1,0 +1,40 @@
+[workspace]
+resolver = "2"
+members = [
+    "instance-manager",
+    "protocol-gateway",
+    "protocol-mux",
+    "dap-protocol",
+    "dap-core",
+    "dap-plugin-api",
+    "dap-proxy",
+    "dap-cli",
+    "tests/fixtures/fake-dap-adapter",
+]
+
+[workspace.package]
+edition = "2024"
+license = "MIT"
+authors = ["Coditary"]
+repository = "https://github.com/coditary/dap"
+rust-version = "1.85"
+
+[workspace.dependencies]
+anyhow = "1"
+async-trait = "0.1"
+clap = { version = "4", features = ["derive", "env"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "sync", "process", "io-util", "net", "time"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+uuid = { version = "1", features = ["v4", "serde"] }
+
+# Internal crates (path deps for workspace members)
+instance-manager = { path = "instance-manager" }
+protocol-gateway = { path = "protocol-gateway" }
+protocol-mux = { path = "protocol-mux" }
+dap-protocol = { path = "dap-protocol" }
+dap-core = { path = "dap-core" }
+dap-plugin-api = { path = "dap-plugin-api" }

@@ -1,0 +1,26 @@
+[package]
+name = "fake-dap-adapter"
+description = "Minimal stdio DAP adapter for integration tests (oracle, not production)"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+authors = ["Coditary"]
+publish = false
+
+[[bin]]
+name = "fake-dap-adapter"
+path = "src/main.rs"
+
+[lib]
+name = "fake_dap_adapter"
+path = "src/lib.rs"
+
+[dependencies]
+anyhow = "1"
+base64 = "0.22"
+clap = { version = "4", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "io-std", "io-util"] }
+
+[dev-dependencies]
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "io-util", "process", "time"] }

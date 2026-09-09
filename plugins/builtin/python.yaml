@@ -1,0 +1,15 @@
+id: python
+name: Python (debugpy)
+version: 0.1.0
+languages:
+  - python
+launchTypes:
+  - python
+fileExtensions:
+  - py
+adapter:
+  transport: stdio
+  command: python3
+  args:
+    - -m
+    - debugpy.adapter

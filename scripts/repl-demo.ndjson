@@ -1,0 +1,15 @@
+{"id":1,"op":"help"}
+{"id":2,"op":"sync"}
+{"id":3,"op":"threads"}
+{"id":4,"op":"stack"}
+{"id":5,"op":"status"}
+{"id":6,"op":"breakpoint","path":"main.py","line":10,"action":"add","condition":"x > 0"}
+{"id":7,"op":"breakpoint","path":"main.py","line":10,"action":"toggle"}
+{"id":8,"op":"show"}
+{"id":9,"op":"step_over"}
+{"id":10,"op":"scopes"}
+{"id":11,"op":"locals"}
+{"id":12,"op":"evaluate","expression":"1 + 1"}
+{"id":13,"op":"thread","thread_id":1}
+{"id":14,"op":"clear","path":"main.py","line":10}
+{"id":15,"op":"quit"}
