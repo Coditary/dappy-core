@@ -117,8 +117,7 @@ impl TargetManifest {
                 "at least one targetType is required".into(),
             ));
         }
-        if self.spawn.is_some() {
-            let spawn = self.spawn.as_ref().expect("checked");
+        if let Some(spawn) = &self.spawn {
             if spawn.command.trim().is_empty() {
                 return Err(PluginError::InvalidManifest(
                     "spawn.command must not be empty".into(),
