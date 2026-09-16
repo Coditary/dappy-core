@@ -5,7 +5,7 @@ use std::time::Duration;
 
 use anyhow::{Context, Result};
 use dap_core::{
-    AdapterCapabilities, ControlClient, DataWatchEntry, ExceptionBreakpointSpec,
+    AdapterCapabilities, ControlClient, DataWatchEntry, ExceptionBreakpointSpec, ExecutionStatus,
     ExecutionStateTracker, FrameLocation, NavigateResult, NavigationType, SourceBreakpointSpec,
     DEFAULT_MAX_VALUE_CHARS, DEFAULT_MAX_VARIABLES, build_sync_presentation,
     condition_result_is_true, data_watch_should_stop, ensure_navigation_supported,
@@ -129,8 +129,13 @@ impl ReplContext {
         startup_kill: Option<Arc<SharedStartupKill>>,
     ) -> Result<Self> {
         let mut ctx = if let Some(program) = &options.program {
-            let session =
-                HeadlessSession::spawn(program, options.adapter.as_deref(), startup_kill).await?;
+            let session = HeadlessSession::spawn(
+                program,
+                options.adapter.as_deref(),
+                options.target.as_deref(),
+                startup_kill,
+            )
+            .await?;
             Self::from_owned(session, program)
         } else {
             Self::from_attached(connect_client(&options.globals).await?)
@@ -640,6 +645,55 @@ impl ReplContext {
     pub async fn status(&mut self) -> Result<Value> {
         self.observe_pending(Duration::from_millis(100)).await?;
         Ok(serde_json::to_value(self.execution.summary())?)
+    }
+
+    /// Poll DAP events until the debuggee stops, exits, or the timeout elapses.
+    pub async fn wait_for_stop(&mut self, timeout: Duration) -> Result<Value> {
+        let deadline = tokio::time::Instant::now() + timeout;
+        while tokio::time::Instant::now() < deadline {
+            self.observe_pending(Duration::from_millis(100)).await?;
+            let summary = self.execution.summary();
+            if matches!(
+                summary.state.status,
+                ExecutionStatus::Stopped | ExecutionStatus::Exited
+            ) {
+                let stack = self.stack().await?;
+                return Ok(json!({
+                    "stopped": true,
+                    "status": summary,
+                    "stack": stack,
+                }));
+            }
+            tokio::time::sleep(Duration::from_millis(50)).await;
+        }
+        let summary = self.execution.summary();
+        Ok(json!({
+            "timedOut": true,
+            "status": summary,
+        }))
+    }
+
+    /// Refresh and return a composite snapshot for AI inspection.
+    pub async fn inspect(&mut self, context_lines: Option<u32>) -> Result<Value> {
+        let sync = self.sync().await?;
+        let status = self.status().await?;
+        let stack = self.stack().await?;
+        let show = self.show(context_lines, false).await?;
+        let locals = self.locals().await?;
+        Ok(json!({
+            "sync": sync,
+            "status": status,
+            "stack": stack,
+            "show": show,
+            "locals": locals,
+        }))
+    }
+
+    /// Terminate the debuggee and end the DAP session.
+    pub async fn terminate_session(&mut self) -> Result<Value> {
+        self.client_mut().terminate().await?;
+        self.execution.apply_event("terminated", None);
+        Ok(json!({ "terminated": true }))
     }
 
     pub async fn breakpoint(&mut self, request: BreakpointRequest) -> Result<Value> {

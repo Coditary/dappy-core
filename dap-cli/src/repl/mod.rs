@@ -1,10 +1,10 @@
 mod breakpoint;
 mod cancel;
 mod commands;
-mod context;
+pub mod context;
 mod help;
 mod input;
-mod json_proto;
+pub mod json_proto;
 mod session;
 
 use std::io::{self, Write};
@@ -15,7 +15,7 @@ use dap_core::{
     NavigationType, StackTraceOptions, TerminalStyle, format_breakpoints_table,
     format_evaluate, format_evaluate_pretty, format_exception_breakpoints,
     format_exception_filters, format_navigate_status, format_scopes, format_stack_trace_with_options,
-    format_status, format_threads, format_variables_table, warm_languages_for_colors,
+    format_status, format_threads, format_variables_table,
 };
 use serde_json::Value;
 
@@ -33,6 +33,8 @@ use json_proto::{JsonRequest, handle_request, ready_event};
 pub struct ReplOptions {
     pub program: Option<String>,
     pub adapter: Option<String>,
+    /// RSP target id from `target.yaml` (e.g. gdbserver, qemu-x86-kernel).
+    pub target: Option<String>,
     pub globals: crate::commands::GlobalOpts,
     /// NDJSON mode: one JSON request per stdin line, one JSON response per stdout line.
     pub ndjson: bool,
@@ -59,11 +61,6 @@ impl ReplDisplay {
             Some(value) => value,
             None => !self.colors_enabled,
         };
-        if next && !self.colors_enabled {
-            for warning in warm_languages_for_colors() {
-                eprintln!("warning: {warning}");
-            }
-        }
         self.colors_enabled = next;
         println!(
             "Syntax colors {}",

@@ -1,0 +1,33 @@
+[package]
+name = "dap-proxy"
+description = "Editor-facing DAP proxy server (stdio)"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+authors = ["Coditary"]
+rust-version = "1.85"
+
+[[bin]]
+name = "dap-proxy"
+path = "src/main.rs"
+
+[lib]
+name = "dap_proxy"
+path = "src/lib.rs"
+
+[dependencies]
+anyhow = "1"
+async-trait = "0.1"
+clap = { version = "4", features = ["derive", "env"] }
+dap-core = { path = "../dap-core" }
+dap-plugin-api = { workspace = true }
+dap-protocol = { path = "../dap-protocol" }
+instance-manager = { path = "../instance-manager" }
+serde_json = "1"
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "io-std", "io-util", "process", "time", "signal"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[dev-dependencies]
+serde_json = "1"
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "io-util", "process", "time"] }

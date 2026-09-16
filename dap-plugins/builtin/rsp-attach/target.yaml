@@ -1,0 +1,15 @@
+id: rsp-attach
+name: Attach to RSP server
+version: 0.1.0
+description: Connect to an already running gdb-remote endpoint
+targetTypes:
+  - gdb-remote
+  - rsp
+
+connect:
+  host: 127.0.0.1
+  port: 1234
+
+attach:
+  program: "${program.abs}"
+  decompiler: auto

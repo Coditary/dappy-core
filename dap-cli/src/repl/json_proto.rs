@@ -436,6 +436,7 @@ mod tests {
         let options = crate::repl::ReplOptions {
             program: Some("main.py".into()),
             adapter: Some("fake".into()),
+            target: None,
             ndjson: true,
             globals: crate::commands::GlobalOpts {
                 json: false,

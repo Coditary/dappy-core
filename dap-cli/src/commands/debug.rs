@@ -98,12 +98,25 @@ enum DebugCommands {
         /// Explicit adapter id (default: auto-route, e.g. rust for Cargo binaries)
         #[arg(long)]
         adapter: Option<String>,
+        /// RSP target id from `target.yaml` (e.g. gdbserver, qemu-x86-kernel)
+        #[arg(long)]
+        target: Option<String>,
         /// NDJSON mode: one JSON request per stdin line, one JSON response per stdout line
         #[arg(long)]
         ndjson: bool,
     },
-    /// Start MCP server on stdio (alias for `dap-agent` binary)
-    Mcp,
+    /// Start built-in MCP server on stdio (for AI agents / Cursor)
+    Mcp {
+        /// Program/binary to debug (starts a new local session)
+        #[arg(long)]
+        program: Option<String>,
+        /// Explicit adapter id (default: auto-route)
+        #[arg(long)]
+        adapter: Option<String>,
+        /// RSP target id from `target.yaml`
+        #[arg(long)]
+        target: Option<String>,
+    },
     /// Attach to a running multiplexed session via control port (legacy)
     Attach {
         /// Control attach port published by dap-proxy
@@ -229,17 +242,33 @@ impl Debug {
                     println!("Disconnected.");
                 }
             }
-            DebugCommands::Repl { program, adapter, ndjson } => {
+            DebugCommands::Repl {
+                program,
+                adapter,
+                target,
+                ndjson,
+            } => {
                 run_repl(ReplOptions {
                     program,
                     adapter,
+                    target,
                     ndjson: ndjson || globals.json,
                     globals,
                 })
                 .await?;
             }
-            DebugCommands::Mcp => {
-                run_mcp_agent(&globals)?;
+            DebugCommands::Mcp {
+                program,
+                adapter,
+                target,
+            } => {
+                crate::mcp::run(crate::mcp::McpOptions {
+                    globals,
+                    program,
+                    adapter,
+                    target,
+                })
+                .await?;
             }
             DebugCommands::Attach { port, command } => {
                 let mut client = ControlClient::connect(port).await?;
@@ -260,56 +289,6 @@ async fn run_navigate(
     let result = client.navigate(navigation_type, thread_id).await?;
     print_navigate(&result, globals.json);
     Ok(())
-}
-
-fn run_mcp_agent(globals: &GlobalOpts) -> Result<()> {
-    let agent = resolve_dap_agent_binary()?;
-    let mut cmd = std::process::Command::new(&agent);
-    if let Some(port) = globals.control_port {
-        cmd.arg("--control-port").arg(port.to_string());
-    }
-    if let Some(scope) = &globals.scope {
-        cmd.arg("--scope").arg(scope);
-    }
-
-    #[cfg(unix)]
-    {
-        use std::os::unix::process::CommandExt;
-        let err = cmd.exec();
-        anyhow::bail!("failed to exec {}: {err}", agent.display());
-    }
-
-    #[cfg(not(unix))]
-    {
-        let status = cmd.status().context("run dap-agent")?;
-        if !status.success() {
-            anyhow::bail!("dap-agent exited with {status}");
-        }
-        Ok(())
-    }
-}
-
-fn resolve_dap_agent_binary() -> Result<std::path::PathBuf> {
-    if let Ok(path) = std::env::var("DAP_AGENT") {
-        return Ok(std::path::PathBuf::from(path));
-    }
-    if let Ok(path_var) = std::env::var("PATH") {
-        for dir in path_var.split(std::path::MAIN_SEPARATOR) {
-            let candidate = std::path::Path::new(dir).join("dap-agent");
-            if candidate.is_file() {
-                return Ok(candidate);
-            }
-        }
-    }
-    let exe = std::env::current_exe().context("current_exe")?;
-    let debug_dir = exe.parent().context("dap-cli parent")?;
-    let candidate = debug_dir.join("dap-agent");
-    if candidate.is_file() {
-        return Ok(candidate);
-    }
-    anyhow::bail!(
-        "dap-agent not found (set DAP_AGENT or install dap-agent next to dap-cli); build with: go build -o dap-agent ./dap-agent"
-    )
 }
 
 async fn connect_client(globals: &GlobalOpts) -> Result<ControlClient> {

@@ -1,0 +1,29 @@
+[package]
+name = "dap-core"
+description = "Core DAP proxy library: routing, sessions, registry"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+authors = ["Coditary"]
+rust-version = "1.85"
+
+[dependencies]
+anyhow = "1"
+async-trait = "0.1"
+base64 = "0.22"
+dap-gdb-remote = { git = "https://github.com/coditary/dap-gdb-remote", branch = "main" }
+dap-plugin-api = { workspace = true }
+dap-protocol = { path = "../dap-protocol" }
+instance-manager = { path = "../instance-manager" }
+protocol-gateway = { path = "../protocol-gateway" }
+protocol-mux = { path = "../protocol-mux" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "sync", "process", "io-util", "io-std", "net", "time"] }
+tracing = "0.1"
+libc = "0.2"
+
+[dev-dependencies]
+dap-proxy = { path = "../dap-proxy" }
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "process", "io-util", "time"] }

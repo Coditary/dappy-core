@@ -1,0 +1,9 @@
+version: 1
+
+throwSites:
+  - id: panic
+    label: Panic
+    linePatterns:
+      - '\bpanic!\('
+      - '\.unwrap\(\)'
+      - '\.expect\('

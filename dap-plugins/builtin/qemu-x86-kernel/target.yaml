@@ -1,0 +1,25 @@
+id: qemu-x86-kernel
+name: QEMU x86_64 (kernel)
+version: 0.1.0
+description: QEMU system mode with built-in gdb stub (-s -S)
+targetTypes:
+  - qemu
+  - gdb-remote
+  - rsp
+
+spawn:
+  command: qemu-system-x86_64
+  args:
+    - -nographic
+    - -s
+    - -S
+    - -kernel
+    - "${program.abs}"
+
+connect:
+  host: 127.0.0.1
+  port: 1234
+
+attach:
+  program: "${program.abs}"
+  decompiler: auto

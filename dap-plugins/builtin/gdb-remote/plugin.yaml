@@ -1,0 +1,30 @@
+id: gdb-remote
+name: GDB Remote
+version: 0.1.0
+languages: []
+launchTypes:
+  - gdb-remote
+adapter:
+  transport: builtin
+  command: gdb-remote
+  args: []
+
+initialize:
+  adapterID: gdb-remote
+
+launch:
+  request: attach
+  fields:
+    host: "127.0.0.1"
+    port: 1234
+    stopAtEntry: true
+    program: "${program.abs}"
+    imageBase: "0x0"
+
+init:
+  steps:
+    - request: attach
+      useLaunchArguments: true
+      waitForEvent: initialized
+    - request: configurationDone
+      arguments: {}

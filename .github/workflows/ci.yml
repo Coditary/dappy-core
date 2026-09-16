@@ -9,8 +9,11 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  check:
+  dap-core:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dap-core
     steps:
       - uses: actions/checkout@v4
 
@@ -32,3 +35,24 @@ jobs:
 
       - name: coverage
         run: cargo llvm-cov --workspace --ignore-filename-regex '/main\.rs$' --summary-only --fail-under-lines 85
+
+  dap-cli:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dap-cli
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: fmt
+        run: cargo fmt --all -- --check
+
+      - name: clippy
+        run: cargo clippy --all-targets -- -D warnings
+
+      - name: test
+        run: cargo test

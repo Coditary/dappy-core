@@ -1,0 +1,15 @@
+id: fake
+name: Fake DAP Adapter
+version: 0.1.0
+languages: []
+launchTypes:
+  - fake
+adapter:
+  transport: stdio
+  command: fake-dap-adapter
+  args: []
+
+launch:
+  request: launch
+  fields:
+    program: "${program}"

@@ -28,6 +28,8 @@ enum Commands {
     Session(dap_cli::commands::session::Session),
     /// Plugin / adapter registry
     Plugin(dap_cli::commands::plugin::Plugin),
+    /// RSP target registry (`target.yaml`)
+    Target(dap_cli::commands::target::Target),
     /// Start and control debug sessions
     Debug(dap_cli::commands::debug::Debug),
 }
@@ -50,6 +52,7 @@ async fn main() -> Result<()> {
     match cli.command {
         Commands::Session(cmd) => cmd.run(globals).await?,
         Commands::Plugin(cmd) => cmd.run(globals).await?,
+        Commands::Target(cmd) => cmd.run(globals).await?,
         Commands::Debug(cmd) => cmd.run(globals).await?,
     }
 

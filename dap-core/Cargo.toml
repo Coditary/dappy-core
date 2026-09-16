@@ -1,32 +1,38 @@
-[package]
-name = "dap-core"
-description = "Core DAP proxy library: routing, sessions, registry"
-version = "0.1.0"
+[workspace]
+resolver = "2"
+members = [
+    "crates/instance-manager",
+    "crates/protocol-gateway",
+    "crates/protocol-mux",
+    "crates/dap-protocol",
+    "crates/dap-core",
+    "crates/dap-plugin-api",
+    "crates/dap-proxy",
+    "tests/fixtures/fake-dap-adapter",
+]
+
+[workspace.package]
 edition = "2024"
 license = "MIT"
 authors = ["Coditary"]
+repository = "https://github.com/coditary/dap-core"
 rust-version = "1.85"
 
-[dependencies]
+[workspace.dependencies]
 anyhow = "1"
 async-trait = "0.1"
-base64 = "0.22"
-dap-plugin-api = { path = "../dap-plugin-api" }
-dap-protocol = { path = "../dap-protocol" }
-instance-manager = { path = "../instance-manager" }
-protocol-gateway = { path = "../protocol-gateway" }
-protocol-mux = { path = "../protocol-mux" }
+clap = { version = "4", features = ["derive", "env"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 thiserror = "2"
-tokio = { version = "1", features = ["macros", "rt-multi-thread", "sync", "process", "io-util", "io-std", "net", "time"] }
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "sync", "process", "io-util", "net", "time"] }
 tracing = "0.1"
-libc = "0.2"
-tree-sitter = "0.24"
-tree-sitter-highlight = "0.24"
-libloading = "0.8"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+uuid = { version = "1", features = ["v4", "serde"] }
 
-[dev-dependencies]
-dap-proxy = { path = "../dap-proxy" }
-tokio = { version = "1", features = ["macros", "rt-multi-thread", "process", "io-util", "time"] }
-tree-sitter-python = "0.23"
+instance-manager = { path = "crates/instance-manager" }
+protocol-gateway = { path = "crates/protocol-gateway" }
+protocol-mux = { path = "crates/protocol-mux" }
+dap-protocol = { path = "crates/dap-protocol" }
+dap-core = { path = "crates/dap-core" }
+dap-plugin-api = { path = "crates/dap-plugin-api" }

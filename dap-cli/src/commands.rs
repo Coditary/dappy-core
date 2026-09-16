@@ -1,6 +1,7 @@
 pub mod debug;
 pub mod plugin;
 pub mod session;
+pub mod target;
 
 #[derive(Debug, Clone)]
 pub struct GlobalOpts {

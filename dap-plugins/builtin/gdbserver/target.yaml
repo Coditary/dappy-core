@@ -1,0 +1,21 @@
+id: gdbserver
+name: GDB Server (local)
+version: 0.1.0
+description: Spawn gdbserver on the default RSP port
+targetTypes:
+  - gdb-remote
+  - rsp
+
+spawn:
+  command: gdbserver
+  args:
+    - ":1234"
+    - "${program.abs}"
+
+connect:
+  host: 127.0.0.1
+  port: 1234
+
+attach:
+  program: "${program.abs}"
+  decompiler: auto

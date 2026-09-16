@@ -1,0 +1,25 @@
+id: rust
+name: Rust (lldb-dap)
+version: 0.1.0
+attachment: attachment.yaml
+languages:
+  - rust
+launchTypes:
+  - rust
+  - lldb-dap
+fileExtensions:
+  - rs
+adapter:
+  transport: stdio
+  command: lldb-dap
+  args: []
+
+initialize:
+  adapterID: lldb-dap
+
+launch:
+  request: launch
+  fields:
+    program: "${program}"
+    sourceLanguages:
+      - rust

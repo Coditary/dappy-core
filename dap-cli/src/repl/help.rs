@@ -92,9 +92,7 @@ pub fn help_topic(topic: &str) -> Option<String> {
             "set <name> = <value>\n  Assign a variable in the current frame (not `s`, which steps)."
         }
         "colors" | "color" | "syntax-color" | "syntax-colors" => {
-            "colors, color [on|off]\n  Toggle ANSI colors and syntax highlighting (default off).\n  \
-             Turning on loads tree-sitter grammars from ~/.local/share/dap/tree-sitter/ \
-             (or DAP_TREE_SITTER_DIR); missing grammars use a basic fallback with a warning."
+            "colors, color [on|off]\n  Toggle ANSI colors and light source highlighting (default off)."
         }
         "next" | "n" | "step-over" | "stepover" => "next, n\n  Step over the current line.",
         "step" | "s" | "step-in" | "stepin" => "step, s\n  Step into the current line.",

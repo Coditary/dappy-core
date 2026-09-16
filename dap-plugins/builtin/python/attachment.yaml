@@ -1,0 +1,7 @@
+version: 1
+
+throwSites:
+  - id: raise
+    label: Raised exception
+    linePatterns:
+      - '^\s*raise\b'

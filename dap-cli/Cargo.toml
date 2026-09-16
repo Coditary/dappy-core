@@ -18,10 +18,10 @@ path = "src/lib.rs"
 [dependencies]
 anyhow = "1"
 clap = { version = "4", features = ["derive", "env"] }
-dap-core = { path = "../dap-core" }
-dap-plugin-api = { path = "../dap-plugin-api" }
-dap-protocol = { path = "../dap-protocol" }
-instance-manager = { path = "../instance-manager" }
+dap-core = { path = "../dap-core/crates/dap-core" }
+dap-plugin-api = { path = "../dap-core/crates/dap-plugin-api" }
+dap-protocol = { path = "../dap-core/crates/dap-protocol" }
+instance-manager = { path = "../dap-core/crates/instance-manager" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 tokio = { version = "1", features = ["macros", "rt-multi-thread", "net", "signal"] }
@@ -30,9 +30,11 @@ rustyline = "15"
 libc = "0.2"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+rmcp = { version = "2.2.0", features = ["server", "transport-io"] }
+schemars = "1.2.2"
 
 [dev-dependencies]
-dap-proxy = { path = "../dap-proxy" }
-fake-dap-adapter = { path = "../tests/fixtures/fake-dap-adapter" }
+dap-proxy = { path = "../dap-core/crates/dap-proxy" }
+fake-dap-adapter = { path = "../dap-core/tests/fixtures/fake-dap-adapter" }
 serde_json = "1"
 tokio = { version = "1", features = ["macros", "rt-multi-thread", "io-util", "process", "time"] }

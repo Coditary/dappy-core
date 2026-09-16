@@ -1,0 +1,50 @@
+id: python
+name: Python (debugpy)
+version: 0.1.0
+attachment: attachment.yaml
+languages:
+  - python
+launchTypes:
+  - python
+fileExtensions:
+  - py
+adapter:
+  transport: stdio
+  command: python3
+  args:
+    - -m
+    - debugpy.adapter
+
+initialize:
+  adapterID: debugpy
+
+launch:
+  request: launch
+  defaults:
+    type: debugpy
+    request: launch
+    console: internalConsole
+    justMyCode: true
+    stopOnEntry: false
+  fields:
+    program: "${program.abs}"
+    cwd: "${program.parent}"
+    python: "${env:PYTHON}"
+
+init:
+  steps:
+    - request: launch
+      useLaunchArguments: true
+      waitForEvent: initialized
+    - request: setBreakpoints
+      arguments:
+        source:
+          path: "${program.abs}"
+        breakpoints:
+          - line: 1
+      recordEntry:
+        path: "${program.abs}"
+        line: 1
+    - request: configurationDone
+      arguments: {}
+    - waitForResponse: launch
