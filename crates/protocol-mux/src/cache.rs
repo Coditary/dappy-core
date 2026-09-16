@@ -40,9 +40,12 @@ impl LateJoinCache {
 
     pub fn observe_client_request(&mut self, backend_seq: i64, message: &Value) {
         match command(message) {
-            Some("setBreakpoints") => self.breakpoints.track_set_breakpoints_request(backend_seq, message),
+            Some("setBreakpoints") => self
+                .breakpoints
+                .track_set_breakpoints_request(backend_seq, message),
             Some("setExceptionBreakpoints") => {
-                self.breakpoints.track_set_exception_breakpoints_request(message);
+                self.breakpoints
+                    .track_set_exception_breakpoints_request(message);
             }
             _ => {}
         }

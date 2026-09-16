@@ -1,6 +1,9 @@
-use dap_core::{AdapterSpawnOptions, Backend, ControlClient, MultiplexOptions, SessionInitConfig, run_session_init};
+use dap_core::{
+    AdapterSpawnOptions, Backend, ControlClient, MultiplexOptions, SessionInitConfig,
+    run_session_init,
+};
 use dap_gdb_remote::testing::MockGdbServer;
-use dap_plugin_api::{load_from_file, default_builtin_dir};
+use dap_plugin_api::{default_builtin_dir, load_from_file};
 use dap_protocol::{Message, Request};
 use serde_json::json;
 use tokio::time::{Duration, sleep, timeout};

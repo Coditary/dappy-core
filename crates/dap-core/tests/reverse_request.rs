@@ -38,7 +38,11 @@ fn reverse_request_run_in_terminal_spawns_command() {
             assert_eq!(resp.request_seq, 3);
             let body = resp.body.expect("runInTerminal body");
             assert_eq!(body["captured"], true);
-            assert!(body["logPath"].as_str().is_some_and(|path| path.ends_with("3.log")));
+            assert!(
+                body["logPath"]
+                    .as_str()
+                    .is_some_and(|path| path.ends_with("3.log"))
+            );
         }
         other => panic!("expected response, got {:?}", other),
     }

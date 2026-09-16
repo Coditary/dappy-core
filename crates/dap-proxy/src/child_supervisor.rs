@@ -159,27 +159,17 @@ mod tests {
 
     #[test]
     fn supervisor_tracks_executable_path() {
-        let supervisor = ChildProcessSupervisor::new(
-            "parent".into(),
-            None,
-            "fake".into(),
-            None,
-            16,
-        )
-        .expect("supervisor");
+        let supervisor =
+            ChildProcessSupervisor::new("parent".into(), None, "fake".into(), None, 16)
+                .expect("supervisor");
         assert!(supervisor.exe.exists() || supervisor.exe.file_name().is_some());
     }
 
     #[tokio::test]
     async fn teardown_kills_tracked_children() {
-        let supervisor = ChildProcessSupervisor::new(
-            "parent".into(),
-            None,
-            "fake".into(),
-            None,
-            16,
-        )
-        .expect("supervisor");
+        let supervisor =
+            ChildProcessSupervisor::new("parent".into(), None, "fake".into(), None, 16)
+                .expect("supervisor");
         let mut child = Command::new("sleep")
             .arg("60")
             .stdin(Stdio::null())

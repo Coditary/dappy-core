@@ -11,7 +11,9 @@ use crate::cache::LateJoinCache;
 use crate::cancel::translate_cancel;
 use crate::client::{ClientId, ClientRole, Id};
 use crate::error::MuxError;
-use crate::message::{MessageKind, command, message_kind, request_seq, response, seq, set_request_seq, set_seq};
+use crate::message::{
+    MessageKind, command, message_kind, request_seq, response, seq, set_request_seq, set_seq,
+};
 use crate::remapper::{BackendSeq, ClientSeq, MessageRemapper};
 
 const DEFAULT_BROADCAST_CAPACITY: usize = 256;

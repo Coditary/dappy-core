@@ -54,8 +54,14 @@ fn format_scopes_and_variables() {
 
 #[test]
 fn navigation_type_parses_aliases() {
-    assert_eq!("step-over".parse::<NavigationType>().unwrap(), NavigationType::StepOver);
-    assert_eq!("next".parse::<NavigationType>().unwrap(), NavigationType::StepOver);
+    assert_eq!(
+        "step-over".parse::<NavigationType>().unwrap(),
+        NavigationType::StepOver
+    );
+    assert_eq!(
+        "next".parse::<NavigationType>().unwrap(),
+        NavigationType::StepOver
+    );
     assert_eq!(
         "reverse_continue".parse::<NavigationType>().unwrap(),
         NavigationType::ReverseContinue
@@ -64,10 +70,10 @@ fn navigation_type_parses_aliases() {
 
 #[test]
 fn format_breakpoints_and_exception_helpers() {
+    use dap_core::{ExecutionStateSummary, ExecutionStatus, VersionedExecutionState};
     use dap_core::{
         format_breakpoints, format_exception_breakpoints, format_exception_filters, format_status,
     };
-    use dap_core::{ExecutionStateSummary, ExecutionStatus, VersionedExecutionState};
 
     let empty = json!({});
     assert!(format_breakpoints(&empty).contains("(none)"));

@@ -58,10 +58,7 @@ pub fn augment_initialize_response(message: &mut Message) {
 }
 
 /// Answer a client-originated `dapProxyPluginInfo` request locally.
-pub fn handle_plugin_info_request(
-    request: &Request,
-    context: &ProxyPluginContext,
-) -> Message {
+pub fn handle_plugin_info_request(request: &Request, context: &ProxyPluginContext) -> Message {
     Message::Response(Response {
         seq: 0,
         request_seq: request.seq,
@@ -108,7 +105,9 @@ mod tests {
             launch: None,
             init: None,
             attachment: Some("attachment.yaml".into()),
-            source_path: Some(std::path::PathBuf::from("/plugins/builtin/python/plugin.yaml")),
+            source_path: Some(std::path::PathBuf::from(
+                "/plugins/builtin/python/plugin.yaml",
+            )),
         }
     }
 

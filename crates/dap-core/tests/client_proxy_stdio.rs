@@ -1,6 +1,4 @@
-use dap_core::{
-    ProxyStdioOptions, SessionInitConfig, run_session_init, spawn_proxy_stdio,
-};
+use dap_core::{ProxyStdioOptions, SessionInitConfig, run_session_init, spawn_proxy_stdio};
 use dap_plugin_api::{PluginManifest, load_from_file};
 
 #[tokio::test]
@@ -11,9 +9,7 @@ async fn spawn_proxy_stdio_runs_session_init_with_fake_adapter() {
         .with_adapter_cmd(vec![adapter.to_string_lossy().into_owned()])
         .with_adapter("fake");
     opts.proxy_bin = Some(proxy_bin());
-    let mut session = spawn_proxy_stdio(opts)
-        .await
-        .expect("spawn dap-proxy");
+    let mut session = spawn_proxy_stdio(opts).await.expect("spawn dap-proxy");
 
     let result = run_session_init(
         &mut session.client,

@@ -53,13 +53,10 @@ pub struct ControlClient {
 
 impl ControlClient {
     pub async fn connect(control_port: u16) -> Result<Self> {
-        let duplex = tokio::time::timeout(
-            CONNECT_TIMEOUT,
-            connect_control_client(control_port),
-        )
-        .await
-        .with_context(|| format!("timeout connecting to control port {control_port}"))?
-        .with_context(|| format!("connect control port {control_port}"))?;
+        let duplex = tokio::time::timeout(CONNECT_TIMEOUT, connect_control_client(control_port))
+            .await
+            .with_context(|| format!("timeout connecting to control port {control_port}"))?
+            .with_context(|| format!("connect control port {control_port}"))?;
         let (read, write) = duplex.into_channels();
         let mut client = Self {
             read,
@@ -240,9 +237,12 @@ impl ControlClient {
         command: &str,
         arguments: Option<Value>,
     ) -> Result<Message> {
-        tokio::time::timeout(REQUEST_TIMEOUT, self.dap_request_preserve_events_inner(command, arguments))
-            .await
-            .with_context(|| format!("timeout waiting for {command} response"))?
+        tokio::time::timeout(
+            REQUEST_TIMEOUT,
+            self.dap_request_preserve_events_inner(command, arguments),
+        )
+        .await
+        .with_context(|| format!("timeout waiting for {command} response"))?
     }
 
     async fn dap_request_preserve_events_inner(
@@ -511,7 +511,10 @@ impl ControlClient {
 
     pub async fn restart_frame(&mut self, frame_id: i64) -> Result<Value> {
         let message = self
-            .dap_request("restartFrame", Some(serde_json::json!({ "frameId": frame_id })))
+            .dap_request(
+                "restartFrame",
+                Some(serde_json::json!({ "frameId": frame_id })),
+            )
             .await?;
         response_body(message)
     }
@@ -595,15 +598,15 @@ impl ControlClient {
 
     /// Fetch proxy plugin metadata (`dapProxyPluginInfo` extension).
     pub async fn proxy_plugin_info(&mut self) -> Result<Value> {
-        let message = self.dap_request(DAP_PROXY_PLUGIN_INFO_COMMAND, None).await?;
+        let message = self
+            .dap_request(DAP_PROXY_PLUGIN_INFO_COMMAND, None)
+            .await?;
         response_body(message)
     }
 
     /// Fetch the multiplexer's tracked breakpoint state (editor + adapter).
     pub async fn session_breakpoint_snapshot(&mut self) -> Result<Value> {
-        let message = self
-            .dap_request(BREAKPOINT_SNAPSHOT_COMMAND, None)
-            .await?;
+        let message = self.dap_request(BREAKPOINT_SNAPSHOT_COMMAND, None).await?;
         response_body(message)
     }
 

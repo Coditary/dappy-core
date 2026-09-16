@@ -31,8 +31,14 @@ mod tests {
 
     #[test]
     fn smart_step_skips_hidden_frames() {
-        assert!(smart_step_should_skip("/usr/lib/python3/site-packages/foo.py", true));
+        assert!(smart_step_should_skip(
+            "/usr/lib/python3/site-packages/foo.py",
+            true
+        ));
         assert!(!smart_step_should_skip("/home/proj/main.py", true));
-        assert!(!smart_step_should_skip("/usr/lib/python3/site-packages/foo.py", false));
+        assert!(!smart_step_should_skip(
+            "/usr/lib/python3/site-packages/foo.py",
+            false
+        ));
     }
 }

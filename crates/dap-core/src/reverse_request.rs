@@ -25,11 +25,7 @@ pub fn handle_reverse_request(message: &Message) -> Option<Message> {
 }
 
 fn handle_run_in_terminal(request: &Request) -> Message {
-    let arguments = request
-        .arguments
-        .as_ref()
-        .cloned()
-        .unwrap_or(Value::Null);
+    let arguments = request.arguments.as_ref().cloned().unwrap_or(Value::Null);
 
     let cmdline = arguments
         .get("args")
@@ -40,10 +36,7 @@ fn handle_run_in_terminal(request: &Request) -> Message {
         return fail_reverse_request(request, "runInTerminal missing args");
     };
 
-    let program = cmdline
-        .first()
-        .and_then(Value::as_str)
-        .unwrap_or_default();
+    let program = cmdline.first().and_then(Value::as_str).unwrap_or_default();
     if program.is_empty() {
         return fail_reverse_request(request, "runInTerminal args[0] must be a command");
     }
@@ -70,7 +63,8 @@ fn handle_run_in_terminal(request: &Request) -> Message {
     command.stdin(Stdio::null());
 
     let log_path = run_in_terminal_log_path(request.seq);
-    if let Err(err) = fs::create_dir_all(log_path.parent().unwrap_or(std::path::Path::new("/tmp"))) {
+    if let Err(err) = fs::create_dir_all(log_path.parent().unwrap_or(std::path::Path::new("/tmp")))
+    {
         return fail_reverse_request(
             request,
             &format!("failed to create runInTerminal log directory: {err}"),
@@ -106,7 +100,9 @@ fn handle_run_in_terminal(request: &Request) -> Message {
                 "processId": child.id(),
             })),
         ),
-        Err(err) => fail_reverse_request(request, &format!("failed to spawn terminal process: {err}")),
+        Err(err) => {
+            fail_reverse_request(request, &format!("failed to spawn terminal process: {err}"))
+        }
     }
 }
 

@@ -90,13 +90,7 @@ async fn start_debugging_spawns_child_session() {
 
     send_request(&mut stdin, 1, "initialize", r#"{}"#).await;
     let _ = read_json(&mut stdout_reader).await;
-    send_request(
-        &mut stdin,
-        2,
-        "launch",
-        r#"{"program":"main.py"}"#,
-    )
-    .await;
+    send_request(&mut stdin, 2, "launch", r#"{"program":"main.py"}"#).await;
     let _ = read_json(&mut stdout_reader).await;
     let _ = read_json(&mut stdout_reader).await;
     send_request(&mut stdin, 3, "configurationDone", r#"{}"#).await;

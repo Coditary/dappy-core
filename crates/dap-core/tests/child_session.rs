@@ -100,7 +100,7 @@ async fn handle_start_debugging_integration() {
 
 #[test]
 fn child_profile_preset_deserializes_from_string() {
-    let profile: ChildSessionProfile = serde_json::from_value(serde_json::json!("debugpy"))
-        .expect("preset");
+    let profile: ChildSessionProfile =
+        serde_json::from_value(serde_json::json!("debugpy")).expect("preset");
     assert_eq!(profile, ChildSessionProfile::debugpy_preset());
 }

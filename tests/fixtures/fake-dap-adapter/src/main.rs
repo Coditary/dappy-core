@@ -24,52 +24,164 @@ fn stack_states() -> &'static [Vec<FakeStackFrame>] {
     static STATES: LazyLock<Vec<Vec<FakeStackFrame>>> = LazyLock::new(|| {
         vec![
             vec![
-                FakeStackFrame { id: 1, name: "accumulate", line: 50 },
-                FakeStackFrame { id: 2, name: "main", line: 76 },
+                FakeStackFrame {
+                    id: 1,
+                    name: "accumulate",
+                    line: 50,
+                },
+                FakeStackFrame {
+                    id: 2,
+                    name: "main",
+                    line: 76,
+                },
             ],
             vec![
-                FakeStackFrame { id: 1, name: "accumulate", line: 51 },
-                FakeStackFrame { id: 2, name: "main", line: 76 },
+                FakeStackFrame {
+                    id: 1,
+                    name: "accumulate",
+                    line: 51,
+                },
+                FakeStackFrame {
+                    id: 2,
+                    name: "main",
+                    line: 76,
+                },
             ],
             vec![
-                FakeStackFrame { id: 1, name: "process_item", line: 38 },
-                FakeStackFrame { id: 2, name: "accumulate", line: 51 },
-                FakeStackFrame { id: 3, name: "main", line: 76 },
+                FakeStackFrame {
+                    id: 1,
+                    name: "process_item",
+                    line: 38,
+                },
+                FakeStackFrame {
+                    id: 2,
+                    name: "accumulate",
+                    line: 51,
+                },
+                FakeStackFrame {
+                    id: 3,
+                    name: "main",
+                    line: 76,
+                },
             ],
             vec![
-                FakeStackFrame { id: 1, name: "normalize", line: 30 },
-                FakeStackFrame { id: 2, name: "process_item", line: 38 },
-                FakeStackFrame { id: 3, name: "accumulate", line: 51 },
-                FakeStackFrame { id: 4, name: "main", line: 76 },
+                FakeStackFrame {
+                    id: 1,
+                    name: "normalize",
+                    line: 30,
+                },
+                FakeStackFrame {
+                    id: 2,
+                    name: "process_item",
+                    line: 38,
+                },
+                FakeStackFrame {
+                    id: 3,
+                    name: "accumulate",
+                    line: 51,
+                },
+                FakeStackFrame {
+                    id: 4,
+                    name: "main",
+                    line: 76,
+                },
             ],
             vec![
-                FakeStackFrame { id: 1, name: "normalize", line: 33 },
-                FakeStackFrame { id: 2, name: "process_item", line: 38 },
-                FakeStackFrame { id: 3, name: "accumulate", line: 51 },
-                FakeStackFrame { id: 4, name: "main", line: 76 },
+                FakeStackFrame {
+                    id: 1,
+                    name: "normalize",
+                    line: 33,
+                },
+                FakeStackFrame {
+                    id: 2,
+                    name: "process_item",
+                    line: 38,
+                },
+                FakeStackFrame {
+                    id: 3,
+                    name: "accumulate",
+                    line: 51,
+                },
+                FakeStackFrame {
+                    id: 4,
+                    name: "main",
+                    line: 76,
+                },
             ],
             vec![
-                FakeStackFrame { id: 1, name: "process_item", line: 40 },
-                FakeStackFrame { id: 2, name: "normalize", line: 33 },
-                FakeStackFrame { id: 3, name: "accumulate", line: 51 },
-                FakeStackFrame { id: 4, name: "main", line: 76 },
+                FakeStackFrame {
+                    id: 1,
+                    name: "process_item",
+                    line: 40,
+                },
+                FakeStackFrame {
+                    id: 2,
+                    name: "normalize",
+                    line: 33,
+                },
+                FakeStackFrame {
+                    id: 3,
+                    name: "accumulate",
+                    line: 51,
+                },
+                FakeStackFrame {
+                    id: 4,
+                    name: "main",
+                    line: 76,
+                },
             ],
             vec![
-                FakeStackFrame { id: 1, name: "process_item", line: 41 },
-                FakeStackFrame { id: 2, name: "accumulate", line: 51 },
-                FakeStackFrame { id: 3, name: "main", line: 76 },
+                FakeStackFrame {
+                    id: 1,
+                    name: "process_item",
+                    line: 41,
+                },
+                FakeStackFrame {
+                    id: 2,
+                    name: "accumulate",
+                    line: 51,
+                },
+                FakeStackFrame {
+                    id: 3,
+                    name: "main",
+                    line: 76,
+                },
             ],
             vec![
-                FakeStackFrame { id: 1, name: "accumulate", line: 52 },
-                FakeStackFrame { id: 2, name: "main", line: 76 },
+                FakeStackFrame {
+                    id: 1,
+                    name: "accumulate",
+                    line: 52,
+                },
+                FakeStackFrame {
+                    id: 2,
+                    name: "main",
+                    line: 76,
+                },
             ],
             vec![
-                FakeStackFrame { id: 1, name: "accumulate", line: 54 },
-                FakeStackFrame { id: 2, name: "main", line: 76 },
+                FakeStackFrame {
+                    id: 1,
+                    name: "accumulate",
+                    line: 54,
+                },
+                FakeStackFrame {
+                    id: 2,
+                    name: "main",
+                    line: 76,
+                },
             ],
             vec![
-                FakeStackFrame { id: 1, name: "accumulate", line: 50 },
-                FakeStackFrame { id: 2, name: "main", line: 76 },
+                FakeStackFrame {
+                    id: 1,
+                    name: "accumulate",
+                    line: 50,
+                },
+                FakeStackFrame {
+                    id: 2,
+                    name: "main",
+                    line: 76,
+                },
             ],
         ]
     });
@@ -395,9 +507,7 @@ async fn main() -> Result<()> {
                 .await?;
             }
             "setExpression" => {
-                let value = message["arguments"]["value"]
-                    .as_str()
-                    .unwrap_or("?");
+                let value = message["arguments"]["value"].as_str().unwrap_or("?");
                 send_response(
                     &mut stdout,
                     request_seq,
@@ -462,12 +572,8 @@ async fn main() -> Result<()> {
                 .await?;
             }
             "setVariable" => {
-                let name = message["arguments"]["name"]
-                    .as_str()
-                    .unwrap_or("?");
-                let value = message["arguments"]["value"]
-                    .as_str()
-                    .unwrap_or("?");
+                let name = message["arguments"]["name"].as_str().unwrap_or("?");
+                let value = message["arguments"]["value"].as_str().unwrap_or("?");
                 send_response(
                     &mut stdout,
                     request_seq,
@@ -526,9 +632,7 @@ async fn main() -> Result<()> {
                 .await?;
             }
             "evaluate" => {
-                let expression = message["arguments"]["expression"]
-                    .as_str()
-                    .unwrap_or("?");
+                let expression = message["arguments"]["expression"].as_str().unwrap_or("?");
                 let result = evaluate_for_tests(expression);
                 send_response(
                     &mut stdout,

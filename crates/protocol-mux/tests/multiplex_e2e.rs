@@ -181,7 +181,10 @@ async fn control_can_fetch_breakpoint_snapshot() {
         .expect("snapshot response");
     assert_eq!(snapshot["success"], true);
     assert_eq!(snapshot["request_seq"], 42);
-    assert_eq!(snapshot["body"]["breakpoints"]["/fake/main.py"][0]["line"], 10);
+    assert_eq!(
+        snapshot["body"]["breakpoints"]["/fake/main.py"][0]["line"],
+        10
+    );
     assert_eq!(
         snapshot["body"]["breakpoints"]["/fake/main.py"][0]["condition"],
         "x > 1"

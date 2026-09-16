@@ -35,10 +35,7 @@ pub fn format_threads(body: &Value) -> String {
         Some(threads) if !threads.is_empty() => {
             for thread in threads {
                 let id = thread.get("id").and_then(Value::as_i64).unwrap_or(-1);
-                let name = thread
-                    .get("name")
-                    .and_then(Value::as_str)
-                    .unwrap_or("?");
+                let name = thread.get("name").and_then(Value::as_str).unwrap_or("?");
                 out.push_str(&format!("  [{id}] {name}\n"));
             }
         }
@@ -115,12 +112,7 @@ pub fn format_stop_location(stack: &Value) -> Option<String> {
         .and_then(Value::as_str)?;
     let line = frame.get("line").and_then(Value::as_i64)?;
     let name = frame.get("name").and_then(Value::as_str).unwrap_or("?");
-    Some(format!(
-        "{}:{} in {}",
-        short_filename(path),
-        line,
-        name
-    ))
+    Some(format!("{}:{} in {}", short_filename(path), line, name))
 }
 
 /// One-line status after navigation (step/continue).
@@ -335,10 +327,7 @@ pub fn format_watches(watches: &Value) -> String {
                     .get("expression")
                     .and_then(Value::as_str)
                     .unwrap_or("?");
-                let result = watch
-                    .get("result")
-                    .and_then(Value::as_str)
-                    .unwrap_or("?");
+                let result = watch.get("result").and_then(Value::as_str).unwrap_or("?");
                 out.push_str(&format!("  {expression} = {result}\n"));
             }
         }
@@ -381,13 +370,8 @@ pub fn build_sync_presentation(
     let stack_text = format_stack_trace_with_options(stack, StackTraceOptions::user());
     let status_text = format_status(execution);
     let watches_text = format_watches(watches);
-    let breakpoints_text = format_breakpoints_table(
-        breakpoints
-            .get("merged")
-            .unwrap_or(breakpoints),
-        true,
-        None,
-    );
+    let breakpoints_text =
+        format_breakpoints_table(breakpoints.get("merged").unwrap_or(breakpoints), true, None);
     let data_watches_text = format_data_watches(data_watches);
     serde_json::json!({
         "status": status_text,

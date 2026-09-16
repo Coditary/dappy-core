@@ -10,8 +10,7 @@ impl TerminalStyle {
     pub fn detect() -> Self {
         let enabled = std::env::var_os("NO_COLOR").is_none()
             && std::io::stdout().is_terminal()
-            && !std::env::var("DAP_NO_COLOR")
-                .is_ok_and(|value| !value.is_empty() && value != "0");
+            && !std::env::var("DAP_NO_COLOR").is_ok_and(|value| !value.is_empty() && value != "0");
         Self { enabled }
     }
 

@@ -18,6 +18,4 @@ pub use message::{
     set_request_seq, set_seq,
 };
 pub use remapper::{BackendSeq, ClientSeq, MessageRemapper};
-pub use session::{
-    BREAKPOINT_SNAPSHOT_COMMAND, ClientEndpoint, MultiplexSession, Multiplexer,
-};
+pub use session::{BREAKPOINT_SNAPSHOT_COMMAND, ClientEndpoint, MultiplexSession, Multiplexer};

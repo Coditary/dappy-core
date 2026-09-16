@@ -88,10 +88,11 @@ pub struct ResolvedTarget {
 
 impl TargetManifest {
     pub fn from_yaml(text: &str, path: &Path) -> Result<Self, PluginError> {
-        let mut manifest: Self = serde_yaml::from_str(text).map_err(|source| PluginError::Parse {
-            path: path.display().to_string(),
-            source,
-        })?;
+        let mut manifest: Self =
+            serde_yaml::from_str(text).map_err(|source| PluginError::Parse {
+                path: path.display().to_string(),
+                source,
+            })?;
         manifest.source_path = Some(path.to_path_buf());
         manifest.validate()?;
         Ok(manifest)
@@ -102,10 +103,14 @@ impl TargetManifest {
             return Err(PluginError::InvalidManifest("id must not be empty".into()));
         }
         if self.name.trim().is_empty() {
-            return Err(PluginError::InvalidManifest("name must not be empty".into()));
+            return Err(PluginError::InvalidManifest(
+                "name must not be empty".into(),
+            ));
         }
         if self.version.trim().is_empty() {
-            return Err(PluginError::InvalidManifest("version must not be empty".into()));
+            return Err(PluginError::InvalidManifest(
+                "version must not be empty".into(),
+            ));
         }
         if self.target_types.is_empty() {
             return Err(PluginError::InvalidManifest(
@@ -169,7 +174,10 @@ impl ResolvedTarget {
     }
 }
 
-fn resolve_spawn(spawn: &TargetSpawn, ctx: &TemplateContext) -> Result<ResolvedTargetSpawn, PluginError> {
+fn resolve_spawn(
+    spawn: &TargetSpawn,
+    ctx: &TemplateContext,
+) -> Result<ResolvedTargetSpawn, PluginError> {
     let command = resolve_required_string(&spawn.command, ctx, "spawn.command")?;
     let args = spawn
         .args
@@ -248,11 +256,14 @@ attach:
 
     #[test]
     fn loads_and_resolves_target_manifest() {
-        let manifest =
-            TargetManifest::from_yaml(sample_manifest_yaml(), Path::new("target.yaml")).expect("load");
+        let manifest = TargetManifest::from_yaml(sample_manifest_yaml(), Path::new("target.yaml"))
+            .expect("load");
         let resolved = manifest.resolve("/tmp/demo.elf").expect("resolve");
         assert_eq!(resolved.id, "gdbserver");
-        assert_eq!(resolved.spawn.as_ref().map(|s| s.command.as_str()), Some("gdbserver"));
+        assert_eq!(
+            resolved.spawn.as_ref().map(|s| s.command.as_str()),
+            Some("gdbserver")
+        );
         let attach = resolved.attach_arguments();
         assert_eq!(attach["decompiler"], json!("auto"));
         assert_eq!(attach["port"], json!(1234));

@@ -104,7 +104,9 @@ fn resolve_string(text: &str, ctx: &TemplateContext) -> Option<String> {
             .as_ref()
             .map(|path| path.display().to_string()),
         "plugin.id" => Some(ctx.plugin_id.clone()),
-        other if other.starts_with("env:") => std::env::var(other.strip_prefix("env:").unwrap_or("")).ok(),
+        other if other.starts_with("env:") => {
+            std::env::var(other.strip_prefix("env:").unwrap_or("")).ok()
+        }
         _ => Some(text.to_string()),
     }
 }

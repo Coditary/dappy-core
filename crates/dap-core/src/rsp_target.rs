@@ -36,11 +36,7 @@ pub async fn prepare_rsp_target(
     })
 }
 
-pub async fn spawn_rsp_target(
-    spawn: &ResolvedTargetSpawn,
-    host: &str,
-    port: u16,
-) -> Result<Child> {
+pub async fn spawn_rsp_target(spawn: &ResolvedTargetSpawn, host: &str, port: u16) -> Result<Child> {
     tracing::info!(
         command = %spawn.command,
         args = ?spawn.args,
@@ -135,10 +131,7 @@ mod tests {
             command: "attach".into(),
             arguments: Some(json!({ "program": "/tmp/app" })),
         });
-        merge_debug_request_arguments(
-            &mut message,
-            &json!({ "host": "127.0.0.1", "port": 2331 }),
-        );
+        merge_debug_request_arguments(&mut message, &json!({ "host": "127.0.0.1", "port": 2331 }));
         let Message::Request(request) = &message else {
             panic!("expected request");
         };

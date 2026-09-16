@@ -6,10 +6,10 @@ use anyhow::{Context, Result};
 use clap::Parser;
 use dap_core::{
     AdapterGuard, Backend, ChildSessionBridge, ChildSessionConfig, ChildSessionProfile,
-    ControlClient, DapEngine, LaunchOptions, MultiplexOptions, ParentBackendKind, ProxyPluginContext,
-    ParentSessionContext, SessionInitConfig, TargetGuard, arm_parent_death_signal,
-    merge_default_attach_arguments, prepare_rsp_target, run_debug_request, spawn_parent_watch,
-    start_headless_multiplexed_proxy, start_multiplexed_proxy,
+    ControlClient, DapEngine, LaunchOptions, MultiplexOptions, ParentBackendKind,
+    ParentSessionContext, ProxyPluginContext, SessionInitConfig, TargetGuard,
+    arm_parent_death_signal, merge_default_attach_arguments, prepare_rsp_target, run_debug_request,
+    spawn_parent_watch, start_headless_multiplexed_proxy, start_multiplexed_proxy,
 };
 use dap_plugin_api::{AdapterSpawn, SpawnTransport};
 use dap_protocol::DuplexChannel;
@@ -133,7 +133,6 @@ async fn main() -> Result<()> {
 }
 
 async fn run_editor_proxy(cli: Cli) -> Result<()> {
-
     let mut engine = DapEngine::new();
     if let Some(dir) = &cli.plugins_dir {
         engine.load_plugins_from_dir(dir)?;
@@ -192,15 +191,13 @@ async fn run_editor_proxy(cli: Cli) -> Result<()> {
         );
     }
 
-    let (child_sessions, child_supervisor) = build_child_session_bridge(
-        &cli,
-        &session.instance_id.to_string(),
-        &adapter_cmd,
-    )?;
+    let (child_sessions, child_supervisor) =
+        build_child_session_bridge(&cli, &session.instance_id.to_string(), &adapter_cmd)?;
 
     let editor = DuplexChannel::from_stdio();
     let (backend_duplex, mut adapter_guard) = AdapterGuard::from_backend(backend);
-    let proxy = start_multiplexed_proxy(editor, backend_duplex, mux_options, child_sessions).await?;
+    let proxy =
+        start_multiplexed_proxy(editor, backend_duplex, mux_options, child_sessions).await?;
 
     let session_store = SessionStore::open(SessionStore::default_dir())?;
     let mut cleanup = SessionCleanupGuard::new(session_store);
@@ -208,8 +205,7 @@ async fn run_editor_proxy(cli: Cli) -> Result<()> {
         let _ = engine.set_control_port(&session, port).await?;
         eprintln!(
             r#"{{"controlPort":{},"instanceId":"{}"}}"#,
-            port,
-            session.instance_id
+            port, session.instance_id
         );
 
         cleanup.save(&SessionRecord {
@@ -241,8 +237,8 @@ async fn run_headless(cli: Cli) -> Result<()> {
         .debug_request
         .clone()
         .context("--headless requires --debug-request")?;
-    let mut debug_args = serde_json::from_str::<Value>(&cli.debug_args)
-        .context("parse --debug-args as JSON")?;
+    let mut debug_args =
+        serde_json::from_str::<Value>(&cli.debug_args).context("parse --debug-args as JSON")?;
 
     let mut engine = DapEngine::new();
     if let Some(dir) = &cli.plugins_dir {
@@ -294,15 +290,12 @@ async fn run_headless(cli: Cli) -> Result<()> {
         .map(ProxyPluginContext::new);
     mux_options.attach_defaults = attach_defaults;
 
-    let (child_sessions, child_supervisor) = build_child_session_bridge(
-        &cli,
-        &session.instance_id.to_string(),
-        &adapter_cmd,
-    )?;
+    let (child_sessions, child_supervisor) =
+        build_child_session_bridge(&cli, &session.instance_id.to_string(), &adapter_cmd)?;
 
     let (backend_duplex, mut adapter_guard) = AdapterGuard::from_backend(backend);
-    let proxy = start_headless_multiplexed_proxy(backend_duplex, mux_options, child_sessions)
-        .await?;
+    let proxy =
+        start_headless_multiplexed_proxy(backend_duplex, mux_options, child_sessions).await?;
 
     let control_port = proxy
         .control_port
@@ -311,8 +304,9 @@ async fn run_headless(cli: Cli) -> Result<()> {
         .await
         .context("connect headless control client")?;
 
-    let mut init_config = SessionInitConfig::new(cli.program.clone().unwrap_or_else(|| "child".into()))
-        .with_adapter_id(session.adapter_id.clone());
+    let mut init_config =
+        SessionInitConfig::new(cli.program.clone().unwrap_or_else(|| "child".into()))
+            .with_adapter_id(session.adapter_id.clone());
     if let Some(manifest) = engine.registry.get(&session.adapter_id).cloned() {
         init_config = init_config.with_manifest(manifest);
     }
@@ -324,8 +318,7 @@ async fn run_headless(cli: Cli) -> Result<()> {
     let mut cleanup = SessionCleanupGuard::new(session_store);
     eprintln!(
         r#"{{"controlPort":{},"instanceId":"{}"}}"#,
-        control_port,
-        session.instance_id
+        control_port, session.instance_id
     );
     cleanup.save(&SessionRecord {
         instance_id: session.instance_id.to_string(),
@@ -409,15 +402,13 @@ fn build_child_session_bridge(
         max_depth: remaining_depth,
         profile: load_child_profile(cli)?,
     };
-    let supervisor = Arc::new(
-        ChildProcessSupervisor::new(
-            parent_instance_id.to_string(),
-            cli.scope.clone(),
-            cli.child_profile.clone(),
-            cli.child_profile_file.clone(),
-            cli.child_max_children,
-        )?,
-    );
+    let supervisor = Arc::new(ChildProcessSupervisor::new(
+        parent_instance_id.to_string(),
+        cli.scope.clone(),
+        cli.child_profile.clone(),
+        cli.child_profile_file.clone(),
+        cli.child_max_children,
+    )?);
     let spawner: Arc<dyn dap_core::ChildSessionSpawner> =
         Arc::new(ProxyChildSpawner::new(supervisor.clone()));
     Ok((
@@ -497,8 +488,7 @@ async fn run_until_shutdown(
     let join_abort = join.abort_handle();
 
     #[cfg(unix)]
-    let mut sigterm =
-        tokio::signal::unix::signal(tokio::signal::unix::SignalKind::terminate())?;
+    let mut sigterm = tokio::signal::unix::signal(tokio::signal::unix::SignalKind::terminate())?;
 
     let run_result = tokio::select! {
         result = join => result,

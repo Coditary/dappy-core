@@ -147,10 +147,8 @@ pub async fn run_debug_request(
 /// Build DAP `initialize` arguments for a frontend or headless client.
 pub fn build_initialize_arguments(config: &SessionInitConfig) -> serde_json::Value {
     if let Some(manifest) = config.manifest.as_ref() {
-        return manifest.build_initialize_arguments(
-            &config.client_id,
-            config.adapter_id.as_deref(),
-        );
+        return manifest
+            .build_initialize_arguments(&config.client_id, config.adapter_id.as_deref());
     }
 
     json!({
@@ -298,7 +296,10 @@ fn step_arguments(
     Ok(Some(json!({})))
 }
 
-fn resolve_entry_location(record: &RecordEntry, ctx: &TemplateContext) -> Result<SessionEntryLocation> {
+fn resolve_entry_location(
+    record: &RecordEntry,
+    ctx: &TemplateContext,
+) -> Result<SessionEntryLocation> {
     let path = resolve_value(&json!(record.path), ctx)
         .and_then(|value| value.as_str().map(str::to_string))
         .with_context(|| format!("resolve entry path template {}", record.path))?;

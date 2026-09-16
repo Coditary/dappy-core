@@ -40,7 +40,10 @@ pub fn frame_location(frame: &Value) -> Option<FrameLocation> {
         path: path.to_string(),
         line,
         column: frame.get("column").and_then(Value::as_i64),
-        name: frame.get("name").and_then(Value::as_str).map(str::to_string),
+        name: frame
+            .get("name")
+            .and_then(Value::as_str)
+            .map(str::to_string),
         frame_id: frame.get("id").and_then(Value::as_i64),
     })
 }
@@ -48,9 +51,10 @@ pub fn frame_location(frame: &Value) -> Option<FrameLocation> {
 /// Pick a stack frame by id, or the first frame when `frame_id` is missing from the trace.
 pub fn select_stack_frame(stack: &Value, frame_id: i64) -> Option<Value> {
     let frames = stack.get("stackFrames").and_then(Value::as_array)?;
-    if let Some(frame) = frames.iter().find(|frame| {
-        frame.get("id").and_then(Value::as_i64) == Some(frame_id)
-    }) {
+    if let Some(frame) = frames
+        .iter()
+        .find(|frame| frame.get("id").and_then(Value::as_i64) == Some(frame_id))
+    {
         return Some(frame.clone());
     }
     frames.first().cloned()
@@ -152,12 +156,7 @@ pub fn format_source_show_styled(
         .file_name()
         .map(|name| name.to_string_lossy().into_owned())
         .unwrap_or_else(|| location.path.clone());
-    let header = format!(
-        "  {}:{} in {}",
-        file,
-        location.line,
-        header_name
-    );
+    let header = format!("  {}:{} in {}", file, location.line, header_name);
     out.push_str(&style.cyan(&header));
     out.push('\n');
 
@@ -212,7 +211,11 @@ fn format_source_snippet_styled(
         } else {
             " ".to_string()
         };
-        let line_num = style.dim(&format!("{line_no:>width$}", line_no = line_no, width = width));
+        let line_num = style.dim(&format!(
+            "{line_no:>width$}",
+            line_no = line_no,
+            width = width
+        ));
         let text = highlight_source_line(lines[line_no - 1], style);
         out.push_str(&format!("  {marker} {line_num} | {text}\n"));
     }
@@ -320,7 +323,10 @@ mod tests {
         let text = format_source_snippet(3, source, 2);
         assert!(text.contains("| line2"));
         assert!(text.contains("| line3"));
-        assert!(text.lines().any(|line| line.contains('>') && line.contains("line3")));
+        assert!(
+            text.lines()
+                .any(|line| line.contains('>') && line.contains("line3"))
+        );
         assert!(text.contains("| line4"));
     }
 

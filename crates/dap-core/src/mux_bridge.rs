@@ -14,7 +14,9 @@ use crate::adapter_guard::request_adapter_disconnect;
 use crate::child_session::{
     ChildSessionConfig, ChildSessionSpawner, ParentSessionContext, handle_start_debugging,
 };
-use crate::proxy_plugin::{ProxyPluginContext, augment_initialize_response, try_handle_client_request};
+use crate::proxy_plugin::{
+    ProxyPluginContext, augment_initialize_response, try_handle_client_request,
+};
 use crate::rsp_target::merge_debug_request_arguments;
 
 /// Options for a multiplexed proxy session.
@@ -86,7 +88,9 @@ pub async fn start_multiplexed_proxy(
     );
 
     let control_port = match options.control_port {
-        Some(port) => Some(serve_control_attach(session.clone(), port, plugin_context.clone()).await?),
+        Some(port) => {
+            Some(serve_control_attach(session.clone(), port, plugin_context.clone()).await?)
+        }
         None => None,
     };
 
@@ -145,7 +149,10 @@ pub async fn start_headless_multiplexed_proxy(
     };
 
     if let Some(port) = control_port {
-        info!(control_port = port, "headless control attach listener ready");
+        info!(
+            control_port = port,
+            "headless control attach listener ready"
+        );
     }
 
     // Keep the backend bridge and mux task alive until the session owner aborts

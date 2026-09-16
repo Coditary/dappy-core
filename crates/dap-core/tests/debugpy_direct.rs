@@ -1,8 +1,6 @@
 use std::time::Duration;
 
-use dap_core::{
-    Backend, ControlClient, SessionInitConfig, run_session_init,
-};
+use dap_core::{Backend, ControlClient, SessionInitConfig, run_session_init};
 use dap_plugin_api::{AdapterSpawn, SpawnTransport, load_from_file};
 
 #[tokio::test]
@@ -23,11 +21,9 @@ async fn debugpy_direct_session_init_when_available() {
     let (duplex, _child) = backend.detach_adapter();
     let mut client = ControlClient::from_duplex(duplex);
 
-    let program = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("../scripts/fixtures/main.py");
-    let program = program
-        .canonicalize()
-        .unwrap_or_else(|_| program);
+    let program =
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../scripts/fixtures/main.py");
+    let program = program.canonicalize().unwrap_or_else(|_| program);
 
     let result = tokio::time::timeout(
         Duration::from_secs(30),
@@ -51,7 +47,10 @@ async fn debugpy_direct_session_init_when_available() {
         Ok(Ok(init)) => {
             assert!(init.ready);
             assert!(
-                matches!(init.stop_reason.as_deref(), Some("entry") | Some("breakpoint")),
+                matches!(
+                    init.stop_reason.as_deref(),
+                    Some("entry") | Some("breakpoint")
+                ),
                 "unexpected stop reason: {:?}",
                 init.stop_reason
             );

@@ -130,7 +130,10 @@ impl SessionStore {
             Ok(record) => Ok(record),
             Err(err) => {
                 let _ = fs::remove_file(path);
-                Err(InstanceError::Other(format!("parse session {:?}: {err}", path)))
+                Err(InstanceError::Other(format!(
+                    "parse session {:?}: {err}",
+                    path
+                )))
             }
         }
     }

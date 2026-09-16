@@ -25,8 +25,7 @@ impl AdapterGuard {
     pub async fn shutdown(&mut self) {
         kill_adapter_process(&mut self.process);
         if let Some(mut child) = self.process.take() {
-            let _ =
-                tokio::time::timeout(Duration::from_secs(2), child.wait()).await;
+            let _ = tokio::time::timeout(Duration::from_secs(2), child.wait()).await;
         }
     }
 }

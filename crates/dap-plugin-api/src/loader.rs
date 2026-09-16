@@ -84,20 +84,12 @@ pub fn load_attachment(path: &Path) -> Result<serde_yaml::Value, PluginError> {
 }
 
 /// Filenames recognized as a plugin manifest inside a per-plugin directory.
-pub const PLUGIN_MANIFEST_NAMES: &[&str] = &[
-    "plugin.yaml",
-    "plugin.yml",
-    "manifest.yaml",
-    "manifest.yml",
-];
+pub const PLUGIN_MANIFEST_NAMES: &[&str] =
+    &["plugin.yaml", "plugin.yml", "manifest.yaml", "manifest.yml"];
 
 /// Filenames recognized as an RSP target manifest inside a per-target directory.
-pub const TARGET_MANIFEST_NAMES: &[&str] = &[
-    "target.yaml",
-    "target.yml",
-    "manifest.yaml",
-    "manifest.yml",
-];
+pub const TARGET_MANIFEST_NAMES: &[&str] =
+    &["target.yaml", "target.yml", "manifest.yaml", "manifest.yml"];
 
 /// Resolve the manifest file inside a per-plugin directory, if present.
 pub fn manifest_in_plugin_dir(dir: &Path) -> Option<PathBuf> {
@@ -234,7 +226,9 @@ fn is_target_manifest_file(path: &Path) -> bool {
         Ok(value) => value,
         Err(_) => return false,
     };
-    value.get("targetTypes").is_some() && value.get("id").is_some() && value.get("adapter").is_none()
+    value.get("targetTypes").is_some()
+        && value.get("id").is_some()
+        && value.get("adapter").is_none()
 }
 
 /// Load builtin and user RSP target manifests (user entries override by id).

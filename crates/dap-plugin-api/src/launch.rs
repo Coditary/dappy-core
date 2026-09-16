@@ -82,7 +82,11 @@ impl PluginManifest {
             "supportsRunInTerminalRequest": true,
         });
 
-        if let Some(defaults) = self.initialize.as_ref().and_then(|spec| spec.defaults.as_ref()) {
+        if let Some(defaults) = self
+            .initialize
+            .as_ref()
+            .and_then(|spec| spec.defaults.as_ref())
+        {
             merge_object(&mut args, defaults, &self.template_context(""));
         }
         args

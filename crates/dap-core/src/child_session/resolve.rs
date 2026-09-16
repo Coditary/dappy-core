@@ -117,9 +117,7 @@ fn rule_matches(
             return false;
         }
     }
-    if !rule.when.parent_backend.is_empty()
-        && !rule.when.parent_backend.contains(&parent.backend)
-    {
+    if !rule.when.parent_backend.is_empty() && !rule.when.parent_backend.contains(&parent.backend) {
         return false;
     }
     true
@@ -232,16 +230,10 @@ fn resolve_template_value(expr: &str, context: &Value) -> Result<Value, String> 
         .and_then(|rest| rest.strip_suffix('}'))
         .ok_or_else(|| format!("invalid template expression: {expr}"))?;
     if path == "configuration" {
-        return Ok(context
-            .get("configuration")
-            .cloned()
-            .unwrap_or(Value::Null));
+        return Ok(context.get("configuration").cloned().unwrap_or(Value::Null));
     }
     if path == "request" {
-        return Ok(context
-            .get("request")
-            .cloned()
-            .unwrap_or(Value::Null));
+        return Ok(context.get("request").cloned().unwrap_or(Value::Null));
     }
     context
         .pointer(&dotted_to_pointer(path))
@@ -269,10 +261,10 @@ fn parse_host_port(endpoint: &str) -> Result<(String, u16), String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::child_session::profile::ChildSessionProfile;
     use crate::child_session::profile::{
         ChildBackendTemplate, ChildSessionRule, DebugRequestTemplate, RuleCondition,
     };
-    use crate::child_session::profile::ChildSessionProfile;
 
     fn debugpy_config() -> ChildSessionConfig {
         ChildSessionConfig {

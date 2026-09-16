@@ -1,6 +1,6 @@
 use dap_core::{
-    AdapterGuard, Backend, MultiplexOptions, ProxyPluginContext, SUPPORTS_DAP_PROXY_PLUGIN_INFO_REQUEST,
-    connect_control_client, roundtrip_request,
+    AdapterGuard, Backend, MultiplexOptions, ProxyPluginContext,
+    SUPPORTS_DAP_PROXY_PLUGIN_INFO_REQUEST, connect_control_client, roundtrip_request,
 };
 use dap_plugin_api::{AdapterSpawn, SpawnTransport, load_from_file};
 use dap_protocol::{DuplexChannel, Message};
@@ -213,10 +213,15 @@ async fn initialize_response_advertises_proxy_plugin_info() {
         .await
         .expect("connect control");
     let (mut control_read, mut control_write) = control.into_channels();
-    let response =
-        roundtrip_request(&mut control_read, &mut control_write, 10, "dapProxyPluginInfo", None)
-            .await
-            .expect("plugin info response");
+    let response = roundtrip_request(
+        &mut control_read,
+        &mut control_write,
+        10,
+        "dapProxyPluginInfo",
+        None,
+    )
+    .await
+    .expect("plugin info response");
     let Message::Response(resp) = response else {
         panic!("expected response");
     };

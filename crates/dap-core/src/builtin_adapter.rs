@@ -26,5 +26,8 @@ async fn spawn_gdb_remote() -> Result<Backend> {
         }
     });
 
-    Ok(Backend::from_duplex(DuplexChannel::from_streams(client_read, client_write)))
+    Ok(Backend::from_duplex(DuplexChannel::from_streams(
+        client_read,
+        client_write,
+    )))
 }

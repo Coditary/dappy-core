@@ -30,8 +30,8 @@ pub fn hex_string_to_bytes(data: &str) -> Result<Vec<u8>> {
     let mut out = Vec::with_capacity(data.len() / 2);
     for idx in (0..data.len()).step_by(2) {
         let pair = &data[idx..idx + 2];
-        let byte = u8::from_str_radix(pair, 16)
-            .with_context(|| format!("invalid hex byte '{pair}'"))?;
+        let byte =
+            u8::from_str_radix(pair, 16).with_context(|| format!("invalid hex byte '{pair}'"))?;
         out.push(byte);
     }
     if out.len() > MAX_WRITE_BYTES {
@@ -46,10 +46,7 @@ pub fn hex_string_to_bytes(data: &str) -> Result<Vec<u8>> {
 
 /// Format a readMemory response body as a hex dump with ASCII sidebar.
 pub fn format_memory_read(body: &Value) -> Result<String> {
-    let address = body
-        .get("address")
-        .and_then(Value::as_str)
-        .unwrap_or("?");
+    let address = body.get("address").and_then(Value::as_str).unwrap_or("?");
     let unreadable_bytes = body.get("unreadableBytes").and_then(Value::as_i64);
 
     let data = match body.get("data").and_then(Value::as_str) {

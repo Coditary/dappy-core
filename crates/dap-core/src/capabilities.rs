@@ -74,8 +74,8 @@ impl AdapterCapabilities {
     }
 
     pub fn from_json(value: &Value) -> Result<Self> {
-        let mut caps: Self = serde_json::from_value(value.clone())
-            .context("parse adapter capabilities")?;
+        let mut caps: Self =
+            serde_json::from_value(value.clone()).context("parse adapter capabilities")?;
         caps.raw = Some(value.clone());
         Ok(caps)
     }
@@ -131,11 +131,21 @@ mod tests {
 
     #[test]
     fn condition_truthiness() {
-        assert!(condition_result_is_true(&serde_json::json!({ "result": "true" })));
-        assert!(condition_result_is_true(&serde_json::json!({ "result": "1" })));
-        assert!(!condition_result_is_true(&serde_json::json!({ "result": "false" })));
-        assert!(!condition_result_is_true(&serde_json::json!({ "result": "0" })));
-        assert!(!condition_result_is_true(&serde_json::json!({ "result": "" })));
+        assert!(condition_result_is_true(
+            &serde_json::json!({ "result": "true" })
+        ));
+        assert!(condition_result_is_true(
+            &serde_json::json!({ "result": "1" })
+        ));
+        assert!(!condition_result_is_true(
+            &serde_json::json!({ "result": "false" })
+        ));
+        assert!(!condition_result_is_true(
+            &serde_json::json!({ "result": "0" })
+        ));
+        assert!(!condition_result_is_true(
+            &serde_json::json!({ "result": "" })
+        ));
     }
 
     #[test]

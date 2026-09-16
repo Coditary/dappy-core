@@ -1,4 +1,4 @@
-use dap_plugin_api::{load_from_file, default_builtin_dir};
+use dap_plugin_api::{default_builtin_dir, load_from_file};
 
 fn fixture_path(id: &str) -> std::path::PathBuf {
     default_builtin_dir().join(id).join("plugin.yaml")

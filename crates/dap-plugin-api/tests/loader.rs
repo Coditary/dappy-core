@@ -26,11 +26,7 @@ adapter:
 "#,
     )
     .expect("write");
-    std::fs::write(
-        plugin_dir.join("attachment.yaml"),
-        "version: 1\n",
-    )
-    .expect("write attachment");
+    std::fs::write(plugin_dir.join("attachment.yaml"), "version: 1\n").expect("write attachment");
 
     let manifests = load_from_dir(&dir).expect("load");
     assert_eq!(manifests.len(), 1);

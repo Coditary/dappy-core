@@ -3,9 +3,9 @@ use std::sync::OnceLock;
 use instance_manager::{InstanceManager, InstanceSpec, InstanceState};
 
 use crate::registry::PluginRegistry;
-use crate::target_registry::TargetRegistry;
 use crate::router::Router;
 use crate::session::{LaunchOptions, SessionHandle};
+use crate::target_registry::TargetRegistry;
 
 /// Top-level orchestrator: registry + routing + instance tracking.
 #[derive(Debug)]
@@ -175,7 +175,9 @@ fn patch_registry_from_env(registry: PluginRegistry) -> PluginRegistry {
     patched
 }
 
-fn patch_adapter_from_env(mut manifest: dap_plugin_api::PluginManifest) -> dap_plugin_api::PluginManifest {
+fn patch_adapter_from_env(
+    mut manifest: dap_plugin_api::PluginManifest,
+) -> dap_plugin_api::PluginManifest {
     if manifest.id == "rust" {
         if let Ok(command) = std::env::var("LLDB_DAP") {
             manifest.adapter.command = command;

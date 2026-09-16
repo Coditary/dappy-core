@@ -51,13 +51,8 @@ impl BreakpointTracker {
             })
             .unwrap_or_default();
 
-        self.pending_set_breakpoints.insert(
-            backend_seq,
-            PendingSetBreakpoints {
-                source_path,
-                specs,
-            },
-        );
+        self.pending_set_breakpoints
+            .insert(backend_seq, PendingSetBreakpoints { source_path, specs });
     }
 
     pub fn observe_set_breakpoints_response(&mut self, message: &Value) {
@@ -131,24 +126,20 @@ impl BreakpointTracker {
         self.exception_breakpoints = filters
             .into_iter()
             .map(|filter| {
-                let condition = filter_options
-                    .and_then(|options| {
-                        options.iter().find_map(|option| {
-                            let option_filter = option.get("filterId").and_then(Value::as_str);
-                            if option_filter == Some(filter.as_str()) {
-                                option
-                                    .get("condition")
-                                    .and_then(Value::as_str)
-                                    .map(str::to_string)
-                            } else {
-                                None
-                            }
-                        })
-                    });
-                ExceptionBreakpointSpec {
-                    filter,
-                    condition,
-                }
+                let condition = filter_options.and_then(|options| {
+                    options.iter().find_map(|option| {
+                        let option_filter = option.get("filterId").and_then(Value::as_str);
+                        if option_filter == Some(filter.as_str()) {
+                            option
+                                .get("condition")
+                                .and_then(Value::as_str)
+                                .map(str::to_string)
+                        } else {
+                            None
+                        }
+                    })
+                });
+                ExceptionBreakpointSpec { filter, condition }
             })
             .collect();
     }
@@ -210,7 +201,10 @@ impl BreakpointTracker {
 
         let spec = SourceBreakpointSpec {
             line,
-            condition: bp.get("condition").and_then(Value::as_str).map(str::to_string),
+            condition: bp
+                .get("condition")
+                .and_then(Value::as_str)
+                .map(str::to_string),
             hit_condition: bp
                 .get("hitCondition")
                 .and_then(Value::as_str)
@@ -313,7 +307,10 @@ fn parse_source_breakpoint(value: &Value) -> Option<SourceBreakpointSpec> {
     })
 }
 
-fn merge_breakpoints(response: &[Value], request_specs: &[SourceBreakpointSpec]) -> Vec<SourceBreakpointSpec> {
+fn merge_breakpoints(
+    response: &[Value],
+    request_specs: &[SourceBreakpointSpec],
+) -> Vec<SourceBreakpointSpec> {
     if response.is_empty() {
         return request_specs.to_vec();
     }

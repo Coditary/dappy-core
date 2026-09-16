@@ -14,7 +14,11 @@ impl TargetRegistry {
     }
 
     pub fn register(&mut self, manifest: TargetManifest) {
-        if let Some(existing) = self.targets.iter().position(|entry| entry.id == manifest.id) {
+        if let Some(existing) = self
+            .targets
+            .iter()
+            .position(|entry| entry.id == manifest.id)
+        {
             self.targets[existing] = manifest;
         } else {
             self.targets.push(manifest);

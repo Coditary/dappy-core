@@ -45,10 +45,14 @@ impl PluginManifest {
             return Err(PluginError::InvalidManifest("id must not be empty".into()));
         }
         if self.name.trim().is_empty() {
-            return Err(PluginError::InvalidManifest("name must not be empty".into()));
+            return Err(PluginError::InvalidManifest(
+                "name must not be empty".into(),
+            ));
         }
         if self.version.trim().is_empty() {
-            return Err(PluginError::InvalidManifest("version must not be empty".into()));
+            return Err(PluginError::InvalidManifest(
+                "version must not be empty".into(),
+            ));
         }
         if self.adapter.command.trim().is_empty() {
             return Err(PluginError::InvalidManifest(
@@ -82,7 +86,9 @@ fn validate_sidecar_reference(
 ) -> Result<(), PluginError> {
     let trimmed = relative.trim();
     if trimmed.is_empty() {
-        return Err(PluginError::InvalidManifest(format!("{field} must not be empty")));
+        return Err(PluginError::InvalidManifest(format!(
+            "{field} must not be empty"
+        )));
     }
     if !(trimmed.ends_with(".yaml") || trimmed.ends_with(".yml")) {
         return Err(PluginError::InvalidManifest(format!(
@@ -90,9 +96,9 @@ fn validate_sidecar_reference(
         )));
     }
     if let Some(source_path) = source_path {
-        let parent = source_path
-            .parent()
-            .ok_or_else(|| PluginError::InvalidManifest("manifest has no parent directory".into()))?;
+        let parent = source_path.parent().ok_or_else(|| {
+            PluginError::InvalidManifest("manifest has no parent directory".into())
+        })?;
         let path = parent.join(trimmed);
         if !path.is_file() {
             return Err(PluginError::InvalidManifest(format!(

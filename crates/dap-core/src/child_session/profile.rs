@@ -1,8 +1,7 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
-pub const LLDB_DAP_STDIO_UNSUPPORTED_MESSAGE: &str =
-    "startDebugging unsupported for lldb-dap profile with stdio parent backend; lldb-dap session handoff requires a reusable tcp server endpoint";
+pub const LLDB_DAP_STDIO_UNSUPPORTED_MESSAGE: &str = "startDebugging unsupported for lldb-dap profile with stdio parent backend; lldb-dap session handoff requires a reusable tcp server endpoint";
 
 /// Whether and how a proxy spawns child sessions for `startDebugging` reverse requests.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -70,7 +69,11 @@ pub struct RuleCondition {
     pub request: Option<String>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub exists: Vec<String>,
-    #[serde(default, rename = "parentBackend", skip_serializing_if = "Vec::is_empty")]
+    #[serde(
+        default,
+        rename = "parentBackend",
+        skip_serializing_if = "Vec::is_empty"
+    )]
     pub parent_backend: Vec<ParentBackendKind>,
 }
 

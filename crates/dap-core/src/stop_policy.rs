@@ -197,14 +197,20 @@ mod tests {
     #[test]
     fn emulated_exception_condition_when_adapter_lacks_support() {
         let caps = AdapterCapabilities::default();
-        assert!(uses_emulated_exception_condition(&caps, Some("type(e) == ValueError")));
+        assert!(uses_emulated_exception_condition(
+            &caps,
+            Some("type(e) == ValueError")
+        ));
         assert!(!uses_emulated_exception_condition(&caps, None));
 
         let caps = AdapterCapabilities {
             supports_exception_filter_options: true,
             ..Default::default()
         };
-        assert!(!uses_emulated_exception_condition(&caps, Some("type(e) == ValueError")));
+        assert!(!uses_emulated_exception_condition(
+            &caps,
+            Some("type(e) == ValueError")
+        ));
     }
 
     #[test]
@@ -227,12 +233,7 @@ mod tests {
     #[test]
     fn client_stop_policy_when_adapter_lacks_features() {
         let caps = AdapterCapabilities::default();
-        let policy = uses_client_stop_policy(
-            &caps,
-            Some("x > 0"),
-            Some("3"),
-            Some("here"),
-        );
+        let policy = uses_client_stop_policy(&caps, Some("x > 0"), Some("3"), Some("here"));
         assert!(policy.condition);
         assert!(policy.hit);
         assert!(policy.log);
@@ -247,12 +248,7 @@ mod tests {
             supports_log_points: true,
             ..Default::default()
         };
-        let policy = uses_client_stop_policy(
-            &caps,
-            Some("x > 0"),
-            Some("3"),
-            Some("here"),
-        );
+        let policy = uses_client_stop_policy(&caps, Some("x > 0"), Some("3"), Some("here"));
         assert!(!policy.condition);
         assert!(!policy.hit);
         assert!(!policy.log);
@@ -286,15 +282,21 @@ mod tests {
         let file = dir.join("sample.rs");
         std::fs::write(&file, "fn main() {\n    \n}\n").expect("write sample");
 
-        assert!(validate_source_line(file.to_str().unwrap(), 0)
-            .unwrap()
-            .contains("less than 1"));
-        assert!(validate_source_line(file.to_str().unwrap(), 99)
-            .unwrap()
-            .contains("past end"));
-        assert!(validate_source_line(file.to_str().unwrap(), 2)
-            .unwrap()
-            .contains("empty"));
+        assert!(
+            validate_source_line(file.to_str().unwrap(), 0)
+                .unwrap()
+                .contains("less than 1")
+        );
+        assert!(
+            validate_source_line(file.to_str().unwrap(), 99)
+                .unwrap()
+                .contains("past end")
+        );
+        assert!(
+            validate_source_line(file.to_str().unwrap(), 2)
+                .unwrap()
+                .contains("empty")
+        );
 
         let _ = std::fs::remove_dir_all(&dir);
     }
