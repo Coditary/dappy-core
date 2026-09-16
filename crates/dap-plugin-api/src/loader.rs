@@ -4,14 +4,28 @@ use crate::error::PluginError;
 use crate::manifest::PluginManifest;
 use crate::target::TargetManifest;
 
-/// Default builtin plugin directory (sibling `dap-plugins/builtin` project).
+/// Default builtin plugin directory.
+///
+/// Resolution order:
+/// 1. `$DAP_PLUGINS_DIR`
+/// 2. Test fixtures in this repo (`tests/fixtures/plugins/builtin`)
+/// 3. Sibling `dap-plugins/builtin` (Dappy monorepo layout)
 pub fn default_builtin_dir() -> PathBuf {
-    std::env::var("DAP_PLUGINS_DIR")
-        .map(PathBuf::from)
-        .unwrap_or_else(|_| {
-            PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-                .join("../../../dap-plugins/builtin")
-        })
+    if let Ok(dir) = std::env::var("DAP_PLUGINS_DIR") {
+        return PathBuf::from(dir);
+    }
+
+    let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    for candidate in [
+        manifest_dir.join("../../tests/fixtures/plugins/builtin"),
+        manifest_dir.join("../../../dap-plugins/builtin"),
+    ] {
+        if candidate.is_dir() {
+            return candidate;
+        }
+    }
+
+    manifest_dir.join("../../tests/fixtures/plugins/builtin")
 }
 
 /// Optional user plugin directory (`$XDG_CONFIG_HOME/dap/plugins` or `~/.config/dap/plugins`).

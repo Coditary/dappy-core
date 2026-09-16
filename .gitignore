@@ -1,16 +1,1 @@
-# Rust
-**/target/
-**/*.rs.bk
-*.profraw
-*.profdata
-lcov.info
-
-# Go (dap-cli/dap-agent)
-dap-cli/dap-agent/dap-agent
-
-# IDE / editor
-.idea/
-.vscode/
-
-# Local reference clones (optional vendored study code)
-dap-core/reference/
+/target

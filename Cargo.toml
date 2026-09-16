@@ -15,7 +15,7 @@ members = [
 edition = "2024"
 license = "MIT"
 authors = ["Coditary"]
-repository = "https://github.com/coditary/dap-core"
+repository = "https://github.com/Coditary/dappy-core"
 rust-version = "1.85"
 
 [workspace.dependencies]
