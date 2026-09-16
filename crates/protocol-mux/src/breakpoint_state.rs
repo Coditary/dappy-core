@@ -280,7 +280,7 @@ impl BreakpointTracker {
                 self.source_breakpoints.remove(&path);
             }
         }
-        for (_, (stored_path, stored_index)) in self.breakpoint_ids.iter_mut() {
+        for (stored_path, stored_index) in self.breakpoint_ids.values_mut() {
             if stored_path == &path && *stored_index > index {
                 *stored_index -= 1;
             }
